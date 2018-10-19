@@ -112,7 +112,7 @@ var starNotary = StarNotary.at(//COPY PASTE CONTRACT ADDRESS YOU GOT FROM PREVIO
 
 NOTE: NEVER COMMIT TO GITHUB WITH A LIVE ACCOUNT MNEMONIC SINCE YOU'LL BE PUBLISHING YOUR PRIVATE KEY!!! 
 
-* You can run the functions in the deployed contract using [EtherWallet](https://www.myetherwallet.com/#contracts), just add the Contract Address and ABI you got in the previous steps, and you'll have access to all the functions.
+* You can run the functions in the deployed contract using [EtherWallet](https://www.myetherwallet.com/#contracts), just add the Contract Address and ABI you got in the before, follow the steps to link Metamask, and you'll have access to all the functions.
 
 Enjoy!
 
