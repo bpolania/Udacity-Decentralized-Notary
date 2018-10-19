@@ -110,3 +110,6 @@ var starNotary = StarNotary.at(//COPY PASTE CONTRACT ADDRESS YOU GOT FROM PREVIO
 var mnemonic = 'new nmemonic here';
 
 NOTE: NEVER COMMIT TO GITHUB WITH A LIVE ACCOUNT MNEMONIC SINCE YOU'LL BE PUBLISHING YOUR PRIVATE KEY!!! 
+
+
+* Good [tutorial](https://medium.com/coinmonks/the-many-ways-to-deploy-your-smart-contract-to-rinkeby-network-38cadf7b20be)
