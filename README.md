@@ -73,7 +73,7 @@ var starNotary = StarNotary.at(//COPY PASTE CONTRACT ADDRESS YOU GOT FROM PREVIO
 
 ```
 
-### Deploy to Rinkeby
+### Deploy to Rinkeby with Metamask
 
 * Open an account in infura (infura.io) and get the Rinkeby endpoint 
 
@@ -85,7 +85,7 @@ https://rinkeby.infura.io/v3/your-api-key
 
 ```
 truffle compile
-truffle migrate --network rinkeby
+truffle migrate
 ```
 
 * Copy contract address from the output of the migration
@@ -95,21 +95,21 @@ truffle migrate --network rinkeby
 * In the index.html file update `httpProvider`, `abi` and `address`
 
 ```
-web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/v3/your-api-key"));
-
-var StarNotary = web3.eth.contract(
-                //COPY PASTE ABI YOU GOT FROM PREVIOUS STEP HERE//
-            );
+if(typeof web3 != 'undefined') { 
+                web3 = new Web3(web3.currentProvider) // what Metamask injected 
+            } else {
+                // Instantiate and set Ganache as your provider
+                web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+            }
             
 var starNotary = StarNotary.at(//COPY PASTE CONTRACT ADDRESS YOU GOT FROM PREVIOUS STEP HERE//);
 
 ```
 
-* If you change the account in Metamask, remember to update the `mnemonic` in the truffle.js file
-
-var mnemonic = 'new nmemonic here';
-
 NOTE: NEVER COMMIT TO GITHUB WITH A LIVE ACCOUNT MNEMONIC SINCE YOU'LL BE PUBLISHING YOUR PRIVATE KEY!!! 
 
+* You can run the functions in the deployed contract using [EtherWallet](https://www.myetherwallet.com/#contracts), just add the Contract Address and ABI you got in the previous steps, and you'll have access to all the functions.
 
-* Good [tutorial](https://medium.com/coinmonks/the-many-ways-to-deploy-your-smart-contract-to-rinkeby-network-38cadf7b20be)
+Enjoy!
+
+
