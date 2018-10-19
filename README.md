@@ -102,6 +102,10 @@ if(typeof web3 != 'undefined') {
                 web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
             }
             
+var StarNotary = web3.eth.contract(
+                // YOUR CONTRACT ABI HERE //
+            );
+            
 var starNotary = StarNotary.at(//COPY PASTE CONTRACT ADDRESS YOU GOT FROM PREVIOUS STEP HERE//);
 
 ```
