@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Star Notary</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+
+        <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>Star Notary</h1>
+
+            <div class="row">
+                <label class="bold">Star Name:</label>
+                <label id="star-name"></label>
+            </div>
+
+            <div class="row">
+                <label class="bold">TokenId:</label>
+                <label id="token-id"></label>
+            </div>
+
+            <button id="create-button" onclick="createButtonClicked()">Create Star</button>
+            <button id="buy-button" onclick="buyButtonClicked()">Buy Star</button>
+            <div class="row">
+                <label id="buy-success"></label>
+            </div>
+            <button id="lookup-button" onclick="lookupButtonClicked()">Lookup Star</button>
+            <div class="row">
+                <label id="lookup-result"></label>
+            </div>
+        </div>
+
+        <script> 
+
+            var currentStar = 0;
+         
+            // web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+            web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/v3/6846d6a3b15c4944be49187945998eb6"));
+            // The default (top) wallet account from a list of test accounts 
+            // web3.eth.defaultAccount = web3.eth.accounts[0];
+            web3.eth.defaultAccount = "0xebb2E3203735aeda2d20Af1C7087Eb6F15AF71ee";
+            
+            console.log(web3.eth.defaultAccount);
+
+            // The interface definition for your smart contract (the ABI) 
+            var StarNotary = web3.eth.contract(
+                [{"constant":true,"inputs":[{"name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"starsForSale","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenId","type":"uint256"}],"name":"getApproved","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokenId","type":"uint256"}],"name":"approve","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokenId","type":"uint256"}],"name":"transferFrom","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokenId","type":"uint256"}],"name":"safeTransferFrom","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"approved","type":"bool"}],"name":"setApprovalForAll","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokenId","type":"uint256"},{"name":"_data","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"},{"name":"operator","type":"address"}],"name":"isApprovedForAll","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"starsArray","outputs":[{"name":"name","type":"string"},{"name":"dec","type":"string"},{"name":"mag","type":"string"},{"name":"cent","type":"string"},{"name":"story","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"value1","type":"uint256"}],"name":"test_value","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":true,"name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"approved","type":"address"},{"indexed":true,"name":"tokenId","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"operator","type":"address"},{"indexed":false,"name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"constant":false,"inputs":[{"name":"_name","type":"string"},{"name":"_dec","type":"string"},{"name":"_mag","type":"string"},{"name":"_cent","type":"string"},{"name":"_story","type":"string"}],"name":"createStar","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_tokenId","type":"uint256"},{"name":"_price","type":"uint256"}],"name":"putStarUpForSale","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"buyStar","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"_dec","type":"string"},{"name":"_mag","type":"string"},{"name":"_cent","type":"string"}],"name":"checkIfStarExists","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"tokenIdToStarInfo","outputs":[{"name":"name","type":"string"},{"name":"story","type":"string"},{"name":"cent","type":"string"},{"name":"dec","type":"string"},{"name":"mag","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokenId","type":"uint256"}],"name":"mint","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_tokenId","type":"uint256"}],"name":"getStarName","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getLatestAddedStarId","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]
+            );
+            // Grab the contract at specified deployed address with the interface defined by the ABI
+            var starNotary = StarNotary.at('0xb0b24d034fb25ECA0FfbD362C920fe23ABB98fca');
+
+            // Enable create button being clicked
+            function createButtonClicked() { 
+                starNotary.createStar("Star power 103!", "ra_032.155", "dec_121.874", "mag_245.978", "I love my wonderful star", {gas: 500000},function (error, result) {
+                        if (!error) {
+                            console.log("no error: " + result);
+                            starNotary.getLatestAddedStarId(function (error, tokenId) {
+                                if (!error) {
+                                    currentStar = tokenId;
+                                    document.getElementById('token-id').innerText = tokenId
+                                    starNotary.getStarName(tokenId - 1, function (error, result) {
+                                        if (!error) {
+                                            document.getElementById('star-name').innerText = result;
+                                            console.log(result);
+                                        } else { 
+                                            console.log(error);
+                                        }
+                                    });
+                                    starNotary.putStarUpForSale(tokenId,1,function (error, result) {
+                                        if (!error) {
+                                            console.log("successfully put for sale");
+                                        } else { 
+                                            console.log(error);
+                                        }
+                                    });
+                                    console.log(result);
+                                } else { 
+                                    console.log(error);
+                                }
+                            });
+                            
+                        } else { 
+                            console.log(error);
+                        }
+                    });
+            }
+
+            // Enable buy button being clicked
+            function buyButtonClicked() { 
+                web3.eth.getAccounts(function(error, accounts) { 
+                    if (error) { 
+                        console.log(error)
+                        return
+                    }
+                    var account = accounts[1]
+                    starNotary.buyStar(1, {gas: 500000, value: 5}, function (error, result) {
+                        if (!error) {
+                            document.getElementById('buy-success').innerText = "The Star is Yours!";
+                        } else { 
+                            console.log(error);
+                            document.getElementById('buy-success').innerText = "You couldn't buy the star";
+                        }
+                    });
+                   
+                })
+            }
+
+            // Enable buy button being clicked
+            function lookupButtonClicked() { 
+                web3.eth.getAccounts(function(error, accounts) { 
+                    if (error) { 
+                        console.log(error)
+                        return
+                    }
+                    var account = accounts[1]
+                    starNotary.tokenIdToStarInfo(currentStar, function (error, result) {
+                        if (!error) {
+                            console.log(result);
+                            document.getElementById('lookup-result').innerText = "[" + result + "]";
+                        } else { 
+                            console.log(error);
+                            document.getElementById('lookup-result').innerText = "We couldn't find that transaction";
+                        }
+                    });
+                   
+                })
+            }
+        </script>
+    </body>
+</html>
